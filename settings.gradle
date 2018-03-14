@@ -1,0 +1,1 @@
+include ':imageviewer', ':app', ':base', ':instantapp'
