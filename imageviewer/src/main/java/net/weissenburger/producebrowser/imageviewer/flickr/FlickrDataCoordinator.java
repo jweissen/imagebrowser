@@ -78,7 +78,7 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                             callback.onError(e, message);
 
                         }
-                    }, imageSizeAPI, query);
+                    }, imageSizeAPI, query, new FlickrImageItemResponseHandler(new FlickrImageItem()));
 
                 }
 
@@ -89,7 +89,7 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                 callback.onError(e, message);
 
             }
-        }, searchDataAPI, query);
+        }, searchDataAPI, query, new FlickrSearchResponseHandler(new FlickrSearchResponse()));
 
 
 

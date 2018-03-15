@@ -23,7 +23,6 @@ public class FlickrSearchRequest implements IProduceDataAPI {
         return encodedURL;
     }
 
-
     //https://api.flickr.com/services/rest/?method=flickr.photos.search
 
 

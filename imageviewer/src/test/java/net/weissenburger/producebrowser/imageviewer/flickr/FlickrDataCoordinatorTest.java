@@ -5,6 +5,7 @@ import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinat
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataLoader;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceQuery;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseCallback;
+import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseHandler;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
 
@@ -66,7 +67,7 @@ public class FlickrDataCoordinatorTest {
                 cb.onResponse(null);
                 return null;
             }
-        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(IProduceDataAPI.class), any(IProduceQuery.class));
+        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(IProduceDataAPI.class), any(IProduceQuery.class), any(IProduceResponseHandler.class));
 
         dataCoordinator.getProduceImages(callback, query);
 
@@ -102,7 +103,7 @@ public class FlickrDataCoordinatorTest {
                 cb.onResponse(responseObj);
                 return null;
             }
-        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrSearchRequest.class), any(IProduceQuery.class));
+        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrSearchRequest.class), any(IProduceQuery.class), any(IProduceResponseHandler.class));
 
 
         doAnswer(new Answer<Void>() {
@@ -113,7 +114,7 @@ public class FlickrDataCoordinatorTest {
 
                 return null;
             }
-        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrImageSizesRequest.class), any(IProduceQuery.class));
+        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrImageSizesRequest.class), any(IProduceQuery.class), any(IProduceResponseHandler.class));
 
 
         doAnswer(new Answer<Void>() {
@@ -154,7 +155,7 @@ public class FlickrDataCoordinatorTest {
                 cb.onError(IProduceResponseCallback.ErrorCode.SERVICE_UNAVAILABLE, "Service Down");
                 return null;
             }
-        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrSearchRequest.class), any(IProduceQuery.class));
+        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrSearchRequest.class), any(IProduceQuery.class), any(IProduceResponseHandler.class));
 
         dataCoordinator.getProduceImages(callback, query);
 
@@ -179,7 +180,7 @@ public class FlickrDataCoordinatorTest {
                 cb.onResponse(responseObj);
                 return null;
             }
-        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrSearchRequest.class), any(IProduceQuery.class));
+        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrSearchRequest.class), any(IProduceQuery.class), any(IProduceResponseHandler.class));
 
 
         doAnswer(new Answer<Void>() {
@@ -190,7 +191,7 @@ public class FlickrDataCoordinatorTest {
 
                 return null;
             }
-        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrImageSizesRequest.class), any(IProduceQuery.class));
+        }).when(dataLoader).request(any(IProduceResponseCallback.class), any(FlickrImageSizesRequest.class), any(IProduceQuery.class), any(IProduceResponseHandler.class));
 
 
         dataCoordinator.getProduceImages(callback, query);

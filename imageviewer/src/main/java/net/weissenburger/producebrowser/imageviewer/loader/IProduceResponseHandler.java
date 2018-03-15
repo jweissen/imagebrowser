@@ -1,6 +1,8 @@
 package net.weissenburger.producebrowser.imageviewer.loader;
 
+import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
+import net.weissenburger.producebrowser.imageviewer.parser.IProduceDeserializer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,5 +15,4 @@ public interface IProduceResponseHandler {
 
     void handleResponse(IProduceResponseCallback callback, JSONObject response);
     void handleError(IProduceResponseCallback callback, String errorMessage);
-
 }

@@ -5,5 +5,5 @@ package net.weissenburger.producebrowser.imageviewer.loader;
  */
 
 public interface IProduceDataLoader {
-    void request(IProduceResponseCallback callback, IProduceDataAPI dataAPI, IProduceQuery query);
+    void request(IProduceResponseCallback callback, IProduceDataAPI dataAPI, IProduceQuery query, IProduceResponseHandler responseHandler);
 }

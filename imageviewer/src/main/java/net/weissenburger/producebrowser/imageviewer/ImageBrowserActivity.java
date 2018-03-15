@@ -16,7 +16,6 @@ import net.weissenburger.producebrowser.imageviewer.flickr.FlickrSearchResponse;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.ProduceDataLoader;
 import net.weissenburger.producebrowser.imageviewer.loader.ProduceQuery;
-import net.weissenburger.producebrowser.imageviewer.loader.ProduceResponseHandler;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 
 
@@ -37,7 +36,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
         } else {
             presenter = (ImageBrowserPresenter) presenterBinding.getPresenter(this);
         }
-        
+
         presenter.getProduce(new ProduceQuery("tomatoes"));
     }
 
@@ -46,7 +45,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
 
         // set up request for FlickrAPIs
         return new FlickrDataCoordinator(new ProduceDataLoader(this, new VolleyNetworkManager.VolleyNetworkManagerBuilder(),
-                new VolleyRequest.VolleyRequestBuilder(), new ProduceResponseHandler(new FlickrSearchResponse()), new JsonRequestWrapper()));
+                new VolleyRequest.VolleyRequestBuilder(), new JsonRequestWrapper()));
 
         //TODO: allow multiple sources of data?
 

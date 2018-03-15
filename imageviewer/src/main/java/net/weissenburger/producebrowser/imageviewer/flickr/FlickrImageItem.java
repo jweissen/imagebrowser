@@ -1,12 +1,16 @@
 package net.weissenburger.producebrowser.imageviewer.flickr;
 
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
+import net.weissenburger.producebrowser.imageviewer.parser.IProduceDeserializer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Jon Weissenburger on 3/14/18.
  */
 
-public class FlickrImageItem implements IProduce {
+public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce> {
 
     String previewImageUrl;
     String fullImageUrl;
@@ -56,5 +60,10 @@ public class FlickrImageItem implements IProduce {
     @Override
     public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+    @Override
+    public IProduce deserialize(JSONObject jsonObject) throws JSONException {
+        return null;
     }
 }

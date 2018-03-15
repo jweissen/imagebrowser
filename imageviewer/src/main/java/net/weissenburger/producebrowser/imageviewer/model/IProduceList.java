@@ -16,5 +16,4 @@ import java.util.List;
 public interface IProduceList {
 
     List<IProduce> getProduce();
-    IProduceList deserialize(JSONObject jsonObject) throws JSONException;
 }

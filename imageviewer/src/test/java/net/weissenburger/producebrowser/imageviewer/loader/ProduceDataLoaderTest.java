@@ -25,24 +25,20 @@ import static org.mockito.Mockito.when;
 public class ProduceDataLoaderTest {
 
     IProduceDataLoader loader;
-    IProduceDataAPI dataAPI;
     Context context;
     INetworkManager.INetworkManagerBuilder networkManagerBuilder;
     IRequest.IRequestBuilder requestBuilder;
-    IProduceResponseHandler handler;
     IJsonRequestWrapper requestWrapper;
 
 
     @Before
     public void setup() {
-        dataAPI = mock(IProduceDataAPI.class);
         context = mock(Context.class);
         networkManagerBuilder = mock(INetworkManager.INetworkManagerBuilder.class);
         requestBuilder = mock(IRequest.IRequestBuilder.class);
-        handler = mock(IProduceResponseHandler.class);
         requestWrapper = mock(IJsonRequestWrapper.class);
 
-        loader = new ProduceDataLoader(dataAPI, context, networkManagerBuilder, requestBuilder, handler, requestWrapper);
+        loader = new ProduceDataLoader(context, networkManagerBuilder, requestBuilder, requestWrapper);
     }
 
     @Test
@@ -50,10 +46,11 @@ public class ProduceDataLoaderTest {
         IProduceResponseCallback callback = mock(IProduceResponseCallback.class);
         IProduceQuery query = mock(IProduceQuery.class);
         IProduceDataAPI dataAPI = mock(IProduceDataAPI.class);
+        IProduceResponseHandler responseHandler = mock(IProduceResponseHandler.class);
 
         when(query.getQuery()).thenReturn(null);
 
-        loader.request(callback, dataAPI, query);
+        loader.request(callback, dataAPI, query, responseHandler);
 
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.BAD_QUERY), anyString());
     }
@@ -63,8 +60,9 @@ public class ProduceDataLoaderTest {
         IProduceResponseCallback callback = mock(IProduceResponseCallback.class);
         IProduceQuery query = null;
         IProduceDataAPI dataAPI = mock(IProduceDataAPI.class);
+        IProduceResponseHandler responseHandler = mock(IProduceResponseHandler.class);
 
-        loader.request(callback, dataAPI, query);
+        loader.request(callback, dataAPI, query, responseHandler);
 
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.BAD_QUERY), anyString());
     }
@@ -74,10 +72,11 @@ public class ProduceDataLoaderTest {
         IProduceResponseCallback callback = mock(IProduceResponseCallback.class);
         IProduceQuery query = mock(IProduceQuery.class);
         IProduceDataAPI dataAPI = mock(IProduceDataAPI.class);
+        IProduceResponseHandler responseHandler = mock(IProduceResponseHandler.class);
 
         when(query.getQuery()).thenReturn("");
 
-        loader.request(callback, dataAPI, query);
+        loader.request(callback, dataAPI, query, responseHandler);
 
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.BAD_QUERY), anyString());
     }
@@ -88,12 +87,13 @@ public class ProduceDataLoaderTest {
         IProduceQuery query = mock(IProduceQuery.class);
         INetworkManager manager = mock(INetworkManager.class);
         IProduceDataAPI dataAPI = mock(IProduceDataAPI.class);
+        IProduceResponseHandler responseHandler = mock(IProduceResponseHandler.class);
 
         when(query.getQuery()).thenReturn("tomatoes");
         when(networkManagerBuilder.getInstance(context)).thenReturn(manager);
         when(requestBuilder.createRequest(any())).thenReturn(mock(IRequest.class));
 
-        loader.request(callback, dataAPI, query);
+        loader.request(callback, dataAPI, query, responseHandler);
 
         // validate request was added to queue
         verify(networkManagerBuilder.getInstance(context)).addToRequestQueue(requestBuilder.createRequest(any()));
@@ -104,10 +104,11 @@ public class ProduceDataLoaderTest {
         IProduceResponseCallback callback = mock(IProduceResponseCallback.class);
         IProduceQuery query = mock(IProduceQuery.class);
         IProduceDataAPI dataAPI = null;
+        IProduceResponseHandler responseHandler = mock(IProduceResponseHandler.class);
 
         when(query.getQuery()).thenReturn("tomatoes");
 
-        loader.request(callback, dataAPI, query);
+        loader.request(callback, dataAPI, query, responseHandler);
 
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.BAD_API_REQUEST), anyString());
     }

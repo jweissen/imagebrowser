@@ -1,9 +1,12 @@
-package net.weissenburger.producebrowser.imageviewer.loader;
+package net.weissenburger.producebrowser.imageviewer.flickr;
 
 import com.google.gson.JsonParseException;
 
+import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseCallback;
+import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseHandler;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
+import net.weissenburger.producebrowser.imageviewer.parser.IProduceDeserializer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,15 +27,18 @@ import static org.mockito.Mockito.when;
  * Created by Jon Weissenburger on 3/7/18.
  */
 
-public class ProduceResponseHandlerTest {
+public class FlickrSearchResponseHandlerTest {
 
     IProduceResponseHandler handler;
+    IProduceDeserializer deserializer;
     IProduceList list;
 
     @Before
     public void setup() {
+        deserializer = mock(IProduceDeserializer.class);
         list = mock(IProduceList.class);
-        handler = new ProduceResponseHandler(list);
+
+        handler = new FlickrSearchResponseHandler(deserializer);
     }
 
 
@@ -43,7 +49,7 @@ public class ProduceResponseHandlerTest {
         JSONObject response = mock(JSONObject.class);
 
         // test null
-        when(list.deserialize(response)).thenReturn(null);
+        when(deserializer.deserialize(response)).thenReturn(null);
         handler.handleResponse(callback, response);
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.NO_RESULTS), anyString());
 
@@ -55,7 +61,7 @@ public class ProduceResponseHandlerTest {
         JSONObject response = mock(JSONObject.class);
 
         // test empty
-        when(list.deserialize(response)).thenReturn(list);
+        when(deserializer.deserialize(response)).thenReturn(list);
         when(list.getProduce()).thenReturn(new ArrayList<IProduce>(0));
         handler.handleResponse(callback, response);
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.NO_RESULTS), anyString());
@@ -66,7 +72,7 @@ public class ProduceResponseHandlerTest {
         IProduceResponseCallback callback = mock(IProduceResponseCallback.class);
         JSONObject response = mock(JSONObject.class);
 
-        when(list.deserialize(response)).thenReturn(list);
+        when(deserializer.deserialize(response)).thenReturn(list);
         ArrayList<IProduce> responseList = new ArrayList<IProduce>();
         responseList.add(mock(IProduce.class));
 
@@ -80,7 +86,7 @@ public class ProduceResponseHandlerTest {
         IProduceResponseCallback callback = mock(IProduceResponseCallback.class);
         JSONObject response = mock(JSONObject.class);
 
-        when(list.deserialize(response)).thenThrow(new JSONException("Parse error!"));
+        when(deserializer.deserialize(response)).thenThrow(new JSONException("Parse error!"));
         handler.handleResponse(callback, response);
         verify(callback).onError(eq(IProduceResponseCallback.ErrorCode.UNKNOWN), Mockito.<String>any());
     }

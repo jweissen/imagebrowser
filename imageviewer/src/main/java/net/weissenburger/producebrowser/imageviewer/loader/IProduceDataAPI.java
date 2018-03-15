@@ -1,5 +1,8 @@
 package net.weissenburger.producebrowser.imageviewer.loader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -9,6 +12,5 @@ import java.io.UnsupportedEncodingException;
 public interface IProduceDataAPI {
 
     String getURL(IProduceQuery query) throws UnsupportedEncodingException;
-
 
 }

@@ -27,22 +27,19 @@ public class ProduceDataLoader implements IProduceDataLoader {
     INetworkManager.INetworkManagerBuilder networkBuilder;
     IRequest.IRequestBuilder<Request> requestBuilder;
     IJsonRequestWrapper jsonRequestWrapper;
-    IProduceResponseHandler responseHandler;
 
     public ProduceDataLoader(Context context,
                                   INetworkManager.INetworkManagerBuilder networkBuilder,
                                   IRequest.IRequestBuilder requestBuilder,
-                                  IProduceResponseHandler handler,
                                   IJsonRequestWrapper requestWrapper) {
         this.context = context;
         this.networkBuilder = networkBuilder;
         this.requestBuilder = requestBuilder;
         this.jsonRequestWrapper = requestWrapper;
-        this.responseHandler = handler;
     }
 
     @Override
-    public void request(final IProduceResponseCallback callback, IProduceDataAPI dataAPI, IProduceQuery query) {
+    public void request(final IProduceResponseCallback callback, IProduceDataAPI dataAPI, IProduceQuery query, final IProduceResponseHandler responseHandler) {
 
         if (query == null || query.getQuery() == null || query.getQuery().isEmpty()) {
             callback.onError(IProduceResponseCallback.ErrorCode.BAD_QUERY, "Query was empty");
