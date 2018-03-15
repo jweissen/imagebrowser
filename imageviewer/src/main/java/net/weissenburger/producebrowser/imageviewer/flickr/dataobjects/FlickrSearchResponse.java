@@ -1,4 +1,4 @@
-package net.weissenburger.producebrowser.imageviewer.flickr;
+package net.weissenburger.producebrowser.imageviewer.flickr.dataobjects;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -7,11 +7,11 @@ import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
 import net.weissenburger.producebrowser.imageviewer.parser.IProduceDeserializer;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,7 +20,10 @@ import java.util.List;
 
 public class FlickrSearchResponse implements IProduceList, IProduceDeserializer<IProduceList> {
 
-    List<IProduce> list;
+    List<? extends IProduce> list;
+
+    FlickrImageItem[] photo;
+
     int page;
     int pages;
     int perpage;
@@ -36,7 +39,10 @@ public class FlickrSearchResponse implements IProduceList, IProduceDeserializer<
     }
 
     @Override
-    public List<IProduce> getProduce() {
+    public List<? extends IProduce> getProduce() {
+        if (photo != null) {
+            list = Arrays.asList(photo);
+        }
         return list;
     }
 

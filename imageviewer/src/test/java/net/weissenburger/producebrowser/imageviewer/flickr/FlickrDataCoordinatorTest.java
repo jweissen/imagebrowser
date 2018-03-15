@@ -1,5 +1,6 @@
 package net.weissenburger.producebrowser.imageviewer.flickr;
 
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageItem;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataAPI;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataLoader;
@@ -7,12 +8,9 @@ import net.weissenburger.producebrowser.imageviewer.loader.IProduceQuery;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseCallback;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseHandler;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
-import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;

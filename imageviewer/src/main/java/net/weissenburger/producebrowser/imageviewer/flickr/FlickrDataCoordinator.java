@@ -1,5 +1,7 @@
 package net.weissenburger.producebrowser.imageviewer.flickr;
 
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageItem;
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrSearchResponse;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataAPI;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataLoader;
@@ -62,7 +64,6 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                         public void onResponse(IProduce... produce) {
                             IProduce item = produce[0];
 
-                            produceItem.setCaption(item.getCaption());
                             produceItem.setFullImageUrl(item.getFullImageUrl());
                             produceItem.setPreviewImageUrl(item.getPreviewImageUrl());
 

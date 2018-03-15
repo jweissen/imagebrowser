@@ -15,5 +15,5 @@ import java.util.List;
 
 public interface IProduceList {
 
-    List<IProduce> getProduce();
+    List<? extends IProduce> getProduce();
 }

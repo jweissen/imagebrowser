@@ -12,7 +12,6 @@ import net.weissenburger.producebrowser.base.networking.JsonRequestWrapper;
 import net.weissenburger.producebrowser.base.networking.VolleyNetworkManager;
 import net.weissenburger.producebrowser.base.networking.VolleyRequest;
 import net.weissenburger.producebrowser.imageviewer.flickr.FlickrDataCoordinator;
-import net.weissenburger.producebrowser.imageviewer.flickr.FlickrSearchResponse;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.ProduceDataLoader;
 import net.weissenburger.producebrowser.imageviewer.loader.ProduceQuery;
@@ -58,7 +57,9 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
 
     @Override
     public void showProduceImages(IProduce... list) {
-        Log.i("ImageBrowserActivity", "list = {}" + list);
+        Log.i("ImageBrowserActivity", "list size = " + list.length);
+        Log.i("ImageBrowserActivity", "item 1: {" + list[0].getCaption() +", " +
+                list[0].getFullImageUrl() + ", " + list[0].getPreviewImageUrl() + ", " + list[0].getImageId() + "}");
 
     }
 

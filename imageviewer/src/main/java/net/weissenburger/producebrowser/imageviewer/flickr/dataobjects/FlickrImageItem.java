@@ -1,4 +1,7 @@
-package net.weissenburger.producebrowser.imageviewer.flickr;
+package net.weissenburger.producebrowser.imageviewer.flickr.dataobjects;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.parser.IProduceDeserializer;
@@ -14,20 +17,37 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
 
     String previewImageUrl;
     String fullImageUrl;
+
+    @SerializedName("title")
     String caption;
+
+    @SerializedName("id")
     String imageId;
 
-    public FlickrImageItem(){
-
-    }
+    FlickrImageSize[] size;
 
     @Override
     public String getPreviewImageUrl() {
+        if (previewImageUrl == null) {
+            for (FlickrImageSize s : size) {
+                if (s.getLabel().equals(sizeKeys.THUMBNAIL.getSize())) {
+                    previewImageUrl = s.getSource();
+                }
+            }
+        }
+
         return previewImageUrl;
     }
 
     @Override
     public String getFullImageUrl() {
+        if (fullImageUrl == null) {
+            for (FlickrImageSize s : size) {
+                if (s.getLabel().equals(sizeKeys.FULL_SIZE.getSize())) {
+                    fullImageUrl = s.getSource();
+                }
+            }
+        }
         return fullImageUrl;
     }
 
@@ -64,6 +84,27 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
 
     @Override
     public IProduce deserialize(JSONObject jsonObject) throws JSONException {
-        return null;
+
+        Gson gson = new Gson();
+        return gson.fromJson(jsonObject.getJSONObject("sizes").toString(), FlickrImageItem.class);
+
     }
+
+    private enum sizeKeys {
+        THUMBNAIL("Thumbnail"),
+        FULL_SIZE("Large");
+
+        private final String size;
+
+        sizeKeys(String size) {
+            this.size = size;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+    }
+
+
 }
