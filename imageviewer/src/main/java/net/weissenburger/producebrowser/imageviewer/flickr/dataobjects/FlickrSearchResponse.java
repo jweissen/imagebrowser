@@ -39,11 +39,12 @@ public class FlickrSearchResponse implements IProduceList, IProduceDeserializer<
     }
 
     @Override
-    public List<? extends IProduce> getProduce() {
+    public List<IProduce> getProduce() {
         if (photo != null) {
             list = Arrays.asList(photo);
         }
-        return list;
+
+        return (List<IProduce>) list;
     }
 
     @Override

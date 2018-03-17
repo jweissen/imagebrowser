@@ -1,17 +1,22 @@
 package net.weissenburger.producebrowser.imageviewer.flickr;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageItem;
 import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrSearchResponse;
+import net.weissenburger.producebrowser.imageviewer.loader.IImageLoaderWrapper;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataAPI;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataLoader;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceQuery;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceResponseCallback;
+import net.weissenburger.producebrowser.imageviewer.loader.ImageLoaderWrapper;
 import net.weissenburger.producebrowser.imageviewer.loader.ProduceQuery;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Jon Weissenburger on 3/11/18.
@@ -25,18 +30,50 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
     IProduceDataLoader loader;
 
     IProduceList list;
+    IProduceQuery lastQuery;
 
     int produceLoaded;
+    boolean isLoading;
+
+    private IImageLoaderWrapper imageLoader;
 
     public FlickrDataCoordinator(IProduceDataLoader dataLoader) {
         this.loader = dataLoader;
+        imageLoader = new ImageLoaderWrapper();
     }
 
 
     @Override
+    public IImageLoaderWrapper getImageLoader() {
+        return imageLoader;
+    }
+
+    @Override
     public void getProduceImages(final IProduceResponseCallback callback, IProduceQuery query) {
 
+        //TODO: make this a comparable
+        if (lastQuery != null && lastQuery.getQuery().equals(query.getQuery()) &&
+                lastQuery.getPage() == query.getPage()) {
+
+//            if (!isLoading) {
+//                callback.onResponse(list.getProduce().toArray(
+//                        new IProduce[list.getProduce().size()]));
+//            }
+
+            callback.onResponse(list.getProduce().toArray(
+                    new IProduce[list.getProduce().size()]));
+
+            return;
+        }
+
+        if (!query.isNextPageQuery()) {
+            FlickrDataCoordinator.this.list = new FlickrSearchResponse();
+        }
+
+
+        lastQuery = query;
         produceLoaded = 0;
+        isLoading = true;
 
         if (query == null || query.getQuery() == null || query.getQuery().isEmpty()) {
             callback.onError(IProduceResponseCallback.ErrorCode.BAD_QUERY, "Request was empty");
@@ -53,7 +90,7 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                     return;
                 }
 
-                FlickrDataCoordinator.this.list = new FlickrSearchResponse(Arrays.asList(produce));
+                list.getProduce().addAll(Arrays.asList(produce));
 
                 for (final IProduce produceItem: list.getProduce()) {
 
@@ -67,16 +104,13 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                             produceItem.setFullImageUrl(item.getFullImageUrl());
                             produceItem.setPreviewImageUrl(item.getPreviewImageUrl());
 
-                            if (++produceLoaded >= list.getProduce().size()) {
-                                callback.onResponse(FlickrDataCoordinator.this.list.getProduce().toArray(
-                                        new IProduce[FlickrDataCoordinator.this.list.getProduce().size()]));
-                            }
-
+                            checkLoadComplete(callback);
                         }
 
                         @Override
                         public void onError(ErrorCode e, String message) {
-                            callback.onError(e, message);
+                            // image sizes load failed, just skip this one
+                           checkLoadComplete(callback);
 
                         }
                     }, imageSizeAPI, query, new FlickrImageItemResponseHandler(new FlickrImageItem()));
@@ -92,8 +126,13 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
             }
         }, searchDataAPI, query, new FlickrSearchResponseHandler(new FlickrSearchResponse()));
 
+    }
 
-
-
+    private void checkLoadComplete(IProduceResponseCallback callback) {
+        if (++produceLoaded >= list.getProduce().size()) {
+            callback.onResponse(FlickrDataCoordinator.this.list.getProduce().toArray(
+                    new IProduce[FlickrDataCoordinator.this.list.getProduce().size()]));
+            isLoading = false;
+        }
     }
 }

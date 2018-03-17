@@ -2,6 +2,7 @@ package net.weissenburger.producebrowser.imageviewer;
 
 import net.weissenburger.producebrowser.base.IPresenter;
 import net.weissenburger.producebrowser.base.IView;
+import net.weissenburger.producebrowser.imageviewer.loader.IImageLoaderWrapper;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceQuery;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 import net.weissenburger.producebrowser.imageviewer.model.IProduceList;
@@ -25,6 +26,7 @@ public interface IBrowserContract {
     interface IBrowserPresenter extends IPresenter {
         void getProduce(IProduceQuery query);
         void onProduceClicked();
+        IImageLoaderWrapper getImageLoader();
     }
 
 }

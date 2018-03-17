@@ -6,6 +6,7 @@ package net.weissenburger.producebrowser.imageviewer.loader;
 
 public interface IProduceDataCoordinator {
 
+    IImageLoaderWrapper getImageLoader();
     void getProduceImages(IProduceResponseCallback callback, IProduceQuery query);
 
 }

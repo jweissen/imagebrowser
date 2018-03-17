@@ -18,7 +18,8 @@ public class FlickrSearchRequest implements IProduceDataAPI {
     public String getURL(IProduceQuery query) throws UnsupportedEncodingException {
         String encodedURL = "https://api.flickr.com/services/rest/?method=flickr.photos.search" +
                 "&api_key=" + API_KEY +
-                "&text=" + URLEncoder.encode(query.getQuery(), "UTF-8") + "&format=json&nojsoncallback=1";
+                "&text=" + URLEncoder.encode(query.getQuery(), "UTF-8") + "&format=json&nojsoncallback=1&per_page=30" +
+                "&page=" + query.getPage();
 
         return encodedURL;
     }

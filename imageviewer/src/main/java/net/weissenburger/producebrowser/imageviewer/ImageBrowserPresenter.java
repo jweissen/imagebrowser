@@ -1,6 +1,7 @@
 package net.weissenburger.producebrowser.imageviewer;
 
 import net.weissenburger.producebrowser.base.IView;
+import net.weissenburger.producebrowser.imageviewer.loader.IImageLoaderWrapper;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataLoader;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceQuery;
@@ -26,7 +27,10 @@ public class ImageBrowserPresenter implements IBrowserContract.IBrowserPresenter
 
     @Override
     public void getProduce(IProduceQuery query) {
-        view.showLoadingView();
+        if (!query.isNextPageQuery()) {
+            // fresh search, show loading view
+            view.showLoadingView();
+        }
 
         dataCoordinator.getProduceImages(new IProduceResponseCallback() {
             @Override
@@ -55,6 +59,11 @@ public class ImageBrowserPresenter implements IBrowserContract.IBrowserPresenter
     @Override
     public void onProduceClicked() {
 
+    }
+
+    @Override
+    public IImageLoaderWrapper getImageLoader() {
+        return dataCoordinator.getImageLoader();
     }
 
     @Override

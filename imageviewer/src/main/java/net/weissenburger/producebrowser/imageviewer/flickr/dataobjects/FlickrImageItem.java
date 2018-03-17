@@ -29,6 +29,10 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     @Override
     public String getPreviewImageUrl() {
         if (previewImageUrl == null) {
+            if (size == null) {
+                return null;
+            }
+
             for (FlickrImageSize s : size) {
                 if (s.getLabel().equals(sizeKeys.THUMBNAIL.getSize())) {
                     previewImageUrl = s.getSource();
@@ -42,6 +46,10 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     @Override
     public String getFullImageUrl() {
         if (fullImageUrl == null) {
+            if (size == null) {
+                return null;
+            }
+
             for (FlickrImageSize s : size) {
                 if (s.getLabel().equals(sizeKeys.FULL_SIZE.getSize())) {
                     fullImageUrl = s.getSource();
@@ -91,7 +99,7 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     }
 
     private enum sizeKeys {
-        THUMBNAIL("Thumbnail"),
+        THUMBNAIL("Large Square"),
         FULL_SIZE("Large");
 
         private final String size;
