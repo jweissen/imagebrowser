@@ -47,6 +47,21 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(layoutManager);
+
+        // have loading spinner span entire row
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == adapter.getItemCount()-1) {
+                    return getResources().getInteger(R.integer.columns);
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        recyclerView.addItemDecoration(new ImageDividerItemDecorator(this));
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
@@ -57,7 +72,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
                     int totalItemCount = layoutManager.getItemCount();
                     int pastVisiblesItems = layoutManager.findFirstCompletelyVisibleItemPosition();
 
-                    if ( !endlessScrollLoading && (visibleItemCount + pastVisiblesItems) >= totalItemCount-10)
+                    if ( !endlessScrollLoading && (visibleItemCount + pastVisiblesItems) >= totalItemCount-4)
                         {
                             endlessScrollLoading = true;
                             currentQuery = currentQuery.nextPage();
