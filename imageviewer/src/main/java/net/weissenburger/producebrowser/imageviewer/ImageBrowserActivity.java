@@ -1,6 +1,8 @@
 package net.weissenburger.producebrowser.imageviewer;
 
 import android.app.ActivityOptions;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
@@ -11,8 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 import net.weissenburger.producebrowser.base.IPresenterHolder;
@@ -37,6 +47,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
     RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     ProgressBar progressBar;
+    Toolbar toolbar;
 
     boolean endlessScrollLoading = false;
     IProduceQuery currentQuery;
@@ -51,6 +62,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
         setContentView(R.layout.activity_image_browser);
 
         recyclerView = findViewById(R.id.image_browser_recycler_view);
+
         layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.columns));
         recyclerView.setHasFixedSize(true);
 
@@ -92,8 +104,15 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
                 }
         });
 
-        // default to 'tomatoes' for now
-        currentQuery = new ProduceQuery("tomatoes");
+        String initialQuery = getIntent().getData().getLastPathSegment();
+        currentQuery = new ProduceQuery(initialQuery);
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(initialQuery);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.image_browser_progress_bar);
 
@@ -103,6 +122,10 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
             presenter = (ImageBrowserPresenter) PresenterBinding.getPresenter(this);
             currentQuery = savedInstanceState.getParcelable(CURRENT_QUERY_KEY);
             endlessScrollLoading = savedInstanceState.getBoolean(ENDLESS_SCROLL_KEY);
+
+            if (currentQuery != null) {
+                toolbar.setTitle(currentQuery.getQuery());
+            }
         }
 
         PresenterBinding.bindPresenter(presenter, this);
@@ -110,6 +133,55 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
 
         presenter.getProduce(currentQuery);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.produce_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+//        if (searchView != null) {
+//            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        }
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                currentQuery = new ProduceQuery(query);
+                presenter.getProduce(currentQuery);
+                toolbar.setTitle(query);
+                adapter = null;
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

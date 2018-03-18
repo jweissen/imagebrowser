@@ -41,8 +41,6 @@ public class FullImageActivity extends AppCompatActivity implements IFullImageCo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_image);
 
-        getSupportActionBar().hide();
-
         imageView = findViewById(R.id.full_image_iv);
         captionTextView = findViewById(R.id.full_image_caption);
 

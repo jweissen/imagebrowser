@@ -18,8 +18,10 @@ public class MainActivity extends AppCompatActivity {
         launchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String initialSearchQuery = "tomato";
+
                 final Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://weissenburger.net/produce"));
+                        Uri.parse("http://weissenburger.net/produce/" + initialSearchQuery));
                 intent.setPackage(getPackageName());
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
 

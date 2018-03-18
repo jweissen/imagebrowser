@@ -13,7 +13,7 @@
 
                 <data
                     android:host="weissenburger.net"
-                    android:pathPattern="/produce"
+                    android:pathPattern="/produce/.*"
                     android:scheme="http" />
             </intent-filter>
         </activity>
