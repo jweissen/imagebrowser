@@ -1,5 +1,7 @@
 package net.weissenburger.producebrowser.imageviewer;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +20,28 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     IProduce[] list;
     ImageLoader imageLoader;
+    ImageClickDelegate delegate;
 
     private static final int VIEW_TYPE_IMAGE = 0;
     private static final int VIEW_TYPE_FOOTER = 1;
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public NetworkImageView image;
+        RowClickDelegate delegate;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, RowClickDelegate delegate) {
             super(v);
             image = v.findViewById(R.id.image_item_imageview);
+            this.delegate = delegate;
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (delegate != null) {
+                delegate.onClick(getAdapterPosition());
+            }
         }
     }
 
@@ -39,9 +52,10 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public ImageAdapter(IProduce[] list, ImageLoader imageLoader) {
+    public ImageAdapter(IProduce[] list, ImageLoader imageLoader, ImageClickDelegate delegate) {
         this.list = list;
         this.imageLoader = imageLoader;
+        this.delegate = delegate;
     }
 
 
@@ -57,8 +71,15 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_footer, parent, false);
             vh = new FooterViewHolder(v);
         } else {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_item, parent, false);
-            vh = new ViewHolder(v);
+            final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_item, parent, false);
+            vh = new ViewHolder(v, new RowClickDelegate() {
+                @Override
+                public void onClick(int position) {
+                    if (delegate != null) {
+                        delegate.onItemClicked(v.findViewById(R.id.image_item_imageview), list[position]);
+                    }
+                }
+            });
         }
 
         return vh;
@@ -86,6 +107,14 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemCount() {
         return list.length + 1;
+    }
+
+    private interface RowClickDelegate {
+        void onClick(int position);
+    }
+
+    public interface ImageClickDelegate {
+        void onItemClicked(View view, IProduce itemSelected);
     }
 
 }

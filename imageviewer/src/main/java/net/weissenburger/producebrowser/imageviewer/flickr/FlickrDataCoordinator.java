@@ -103,6 +103,8 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
 
                             produceItem.setFullImageUrl(item.getFullImageUrl());
                             produceItem.setPreviewImageUrl(item.getPreviewImageUrl());
+                            produceItem.setFullImageHeight(item.getFullImageHeight());
+                            produceItem.setFullImageWidth(item.getFullImageWidth());
 
                             checkLoadComplete(callback);
                         }

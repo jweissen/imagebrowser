@@ -1,5 +1,8 @@
 package net.weissenburger.producebrowser.imageviewer.flickr.dataobjects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,18 +29,42 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
 
     FlickrImageSize[] size;
 
+    int fullImageHeight;
+    int fullImageWidth;
+
+
+    protected FlickrImageItem(Parcel in) {
+        previewImageUrl = in.readString();
+        fullImageUrl = in.readString();
+        caption = in.readString();
+        imageId = in.readString();
+        fullImageHeight = in.readInt();
+        fullImageWidth = in.readInt();
+        size = in.createTypedArray(FlickrImageSize.CREATOR);
+    }
+
+    public FlickrImageItem() {
+
+    }
+
+    public static final Creator<FlickrImageItem> CREATOR = new Creator<FlickrImageItem>() {
+        @Override
+        public FlickrImageItem createFromParcel(Parcel in) {
+            return new FlickrImageItem(in);
+        }
+
+        @Override
+        public FlickrImageItem[] newArray(int size) {
+            return new FlickrImageItem[size];
+        }
+    };
+
     @Override
     public String getPreviewImageUrl() {
         if (previewImageUrl == null) {
-            if (size == null) {
-                return null;
-            }
-
-            for (FlickrImageSize s : size) {
-                if (s.getLabel().equals(sizeKeys.THUMBNAIL.getSize())) {
-                    previewImageUrl = s.getSource();
-                }
-            }
+            int index = FlickrImageSize.returnSizeIndex(sizeKeys.THUMBNAIL.getSize(), size);
+            if (index >= 0)
+                previewImageUrl = size[index].getSource();
         }
 
         return previewImageUrl;
@@ -46,15 +73,16 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     @Override
     public String getFullImageUrl() {
         if (fullImageUrl == null) {
-            if (size == null) {
-                return null;
+
+            int index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE.getSize(), size);
+            if (index >= 0)
+                fullImageUrl = size[index].getSource();
+            else {
+                index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
+                if (index >= 0)
+                    fullImageUrl = size[index].getSource();
             }
 
-            for (FlickrImageSize s : size) {
-                if (s.getLabel().equals(sizeKeys.FULL_SIZE.getSize())) {
-                    fullImageUrl = s.getSource();
-                }
-            }
         }
         return fullImageUrl;
     }
@@ -81,6 +109,16 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     }
 
     @Override
+    public void setFullImageHeight(int fullImageHeight) {
+        this.fullImageHeight = fullImageHeight;
+    }
+
+    @Override
+    public void setFullImageWidth(int fullImageWidth) {
+        this.fullImageWidth = fullImageWidth;
+    }
+
+    @Override
     public void setCaption(String caption) {
         this.caption = caption;
     }
@@ -91,6 +129,37 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     }
 
     @Override
+    public int getFullImageHeight() {
+        if (fullImageHeight == 0) {
+
+            int index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE.getSize(), size);
+            if (index >= 0)
+                fullImageHeight = size[index].getHeight();
+            else {
+                index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
+                if (index >= 0)
+                    fullImageHeight = size[index].getHeight();
+            }
+        }
+        return fullImageHeight;
+    }
+
+    @Override
+    public int getFullImageWidth() {
+        if (fullImageWidth == 0) {
+            int index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE.getSize(), size);
+            if (index >= 0)
+                fullImageWidth = size[index].getWidth();
+            else {
+                index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
+                if (index >= 0)
+                    fullImageWidth = size[index].getWidth();
+            }
+        }
+        return fullImageWidth;
+    }
+
+    @Override
     public IProduce deserialize(JSONObject jsonObject) throws JSONException {
 
         Gson gson = new Gson();
@@ -98,9 +167,27 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
 
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(previewImageUrl);
+        parcel.writeString(fullImageUrl);
+        parcel.writeString(caption);
+        parcel.writeString(imageId);
+        parcel.writeInt(fullImageHeight);
+        parcel.writeInt(fullImageWidth);
+        parcel.writeTypedArray(size, i);
+    }
+
+
     private enum sizeKeys {
-        THUMBNAIL("Large Square"),
-        FULL_SIZE("Large");
+        THUMBNAIL("Small"),
+        FULL_SIZE("Large"),
+        FULL_SIZE_FALLBACK("Original");
 
         private final String size;
 

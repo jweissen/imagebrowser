@@ -1,5 +1,11 @@
 package net.weissenburger.producebrowser.imageviewer;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +28,10 @@ import net.weissenburger.producebrowser.imageviewer.loader.ProduceDataLoader;
 import net.weissenburger.producebrowser.imageviewer.loader.ProduceQuery;
 import net.weissenburger.producebrowser.imageviewer.model.IProduce;
 
+import java.io.ByteArrayOutputStream;
 
-public class ImageBrowserActivity extends AppCompatActivity implements IBrowserContract.IBrowserView {
+
+public class ImageBrowserActivity extends AppCompatActivity implements IBrowserContract.IBrowserView, ImageAdapter.ImageClickDelegate {
 
     IBrowserContract.IBrowserPresenter presenter;
     RecyclerView recyclerView;
@@ -134,7 +142,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
         recyclerView.setVisibility(View.VISIBLE);
 
         if (adapter == null) {
-            adapter = new ImageAdapter(list, presenter.getImageLoader().unwrap(this));
+            adapter = new ImageAdapter(list, presenter.getImageLoader().unwrap(this), this);
             recyclerView.setAdapter(adapter);
         } else {
             adapter.updateDataSet(list);
@@ -147,7 +155,16 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
     }
 
     @Override
-    public void navigateToFullView() {
+    public void navigateToFullView(View v, IProduce produce) {
+        Intent i = new Intent(this, FullImageActivity.class);
+        i.putExtra(FullImageActivity.PRODUCE_ITEM, produce);
+
+        String transitionName = getString(R.string.full_image_transition);
+
+        ActivityOptions options = ActivityOptions
+                .makeSceneTransitionAnimation(this, v, transitionName);
+        // start the new activity
+        startActivity(i, options.toBundle());
 
     }
 
@@ -172,4 +189,10 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
     }
 
 
+    @Override
+    public void onItemClicked(View view, IProduce itemSelected) {
+        if (itemSelected != null) {
+            navigateToFullView(view, itemSelected);
+        }
+    }
 }

@@ -1,5 +1,8 @@
 package net.weissenburger.producebrowser.imageviewer;
 
+import android.graphics.Bitmap;
+import android.view.View;
+
 import net.weissenburger.producebrowser.base.IPresenter;
 import net.weissenburger.producebrowser.base.IView;
 import net.weissenburger.producebrowser.imageviewer.loader.IImageLoaderWrapper;
@@ -17,7 +20,7 @@ public interface IBrowserContract {
 
         void showLoadingView();
         void showProduceImages(IProduce... produceList);
-        void navigateToFullView();
+        void navigateToFullView(View v, IProduce item);
         void showNoResultsFound();
         void showGeneralError();
         void repromptQuery();

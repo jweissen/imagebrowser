@@ -4,7 +4,7 @@
 
     <application>
         <activity android:name=".ImageBrowserActivity">
-            <intent-filter android:order="1">
+            <intent-filter android:order="50">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -13,8 +13,8 @@
 
                 <data
                     android:host="weissenburger.net"
-                    android:pathPattern="/.*"
-                    android:scheme="https" />
+                    android:pathPattern="/produce"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".FullImageActivity"/>
     </application>
 
 </manifest>
