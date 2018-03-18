@@ -1,1 +1,1 @@
-include ':imageviewer', ':app', ':base', ':instantapp'
+include ':imageviewer', ':app', ':base', ':instantapp', ':mainmenu'

@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.weissenburger.producebrowser.imageviewer">
+    package="net.weissenburger.mainmenu">
 
     <application>
-        <activity android:name=".ImageBrowserActivity">
-            <intent-filter android:order="50">
+        <activity android:name=".MainActivity">
+            <intent-filter android:order="1">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
-
                 <data
                     android:host="weissenburger.net"
-                    android:pathPattern="/produce"
+                    android:pathPattern="/app"
                     android:scheme="http" />
             </intent-filter>
-        </activity>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity android:name=".FullImageActivity"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
