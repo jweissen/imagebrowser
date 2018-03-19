@@ -20,5 +20,6 @@ public interface IProduce extends Parcelable {
     void setImageId(String imageId);
     int getFullImageHeight();
     int getFullImageWidth();
+    void generateDefaultMapper();
 
 }

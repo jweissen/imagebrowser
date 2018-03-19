@@ -3,6 +3,8 @@ package net.weissenburger.producebrowser.imageviewer.flickr;
 import com.android.volley.toolbox.ImageLoader;
 
 import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageItem;
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageSizeFilter;
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageSizeMapper;
 import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrSearchResponse;
 import net.weissenburger.producebrowser.imageviewer.loader.IImageLoaderWrapper;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataAPI;
@@ -97,6 +99,8 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                         public void onResponse(IProduce... produce) {
                             IProduce item = produce[0];
 
+                            item.generateDefaultMapper();
+
                             produceItem.setFullImageUrl(item.getFullImageUrl());
                             produceItem.setPreviewImageUrl(item.getPreviewImageUrl());
                             produceItem.setFullImageHeight(item.getFullImageHeight());
@@ -111,7 +115,7 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
                            checkLoadComplete(callback);
 
                         }
-                    }, imageSizeAPI, query, new FlickrImageItemResponseHandler(new FlickrImageItem()));
+                    }, imageSizeAPI, query, new FlickrImageItemResponseHandler(new FlickrImageItem(new FlickrImageSizeMapper(new FlickrImageSizeFilter()))));
 
                 }
 

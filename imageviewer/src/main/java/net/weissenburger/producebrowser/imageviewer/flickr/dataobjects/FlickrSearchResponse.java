@@ -24,12 +24,6 @@ public class FlickrSearchResponse implements IProduceList, IProduceDeserializer<
 
     FlickrImageItem[] photo;
 
-    int page;
-    int pages;
-    int perpage;
-    String total;
-
-
     public FlickrSearchResponse(List<IProduce> initialList) {
         list = initialList;
     }

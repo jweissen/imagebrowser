@@ -65,20 +65,6 @@ public class FlickrImageSize implements Parcelable{
         return 0;
     }
 
-    public static int returnSizeIndex(String size, FlickrImageSize[] sizes) {
-        if (sizes == null)
-            return -1;
-
-        for (int i=0; i < sizes.length; i++) {
-            if (sizes[i].getLabel().equals(size)) {
-                return i;
-            }
-        }
-
-        // not found
-        return -1;
-    }
-
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(label);

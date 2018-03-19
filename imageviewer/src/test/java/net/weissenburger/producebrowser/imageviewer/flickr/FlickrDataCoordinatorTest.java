@@ -1,6 +1,9 @@
 package net.weissenburger.producebrowser.imageviewer.flickr;
 
 import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageItem;
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageItemTest;
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageSizeFilter;
+import net.weissenburger.producebrowser.imageviewer.flickr.dataobjects.FlickrImageSizeMapperTest;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataAPI;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataCoordinator;
 import net.weissenburger.producebrowser.imageviewer.loader.IProduceDataLoader;
@@ -25,7 +28,6 @@ import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -130,7 +132,7 @@ public class FlickrDataCoordinatorTest {
         IProduceQuery query = mock(IProduceQuery.class);
 
 
-        final IProduce responseObj = new FlickrImageItem();
+        final IProduce responseObj = new FlickrImageItem(new FlickrImageSizeMapperTest(new FlickrImageSizeFilter()));
         responseObj.setImageId("123456");
 
         final String fullImageUrl = "http://fullimage.url";
@@ -222,7 +224,7 @@ public class FlickrDataCoordinatorTest {
 
         when(query.getQuery()).thenReturn("tomatoes");
 
-        final IProduce responseObj = new FlickrImageItem();
+        final IProduce responseObj = new FlickrImageItem(new FlickrImageSizeMapperTest(new FlickrImageSizeFilter()));
         responseObj.setImageId("123456");
 
         doAnswer(new Answer<Void>() {
@@ -280,10 +282,10 @@ public class FlickrDataCoordinatorTest {
 
         when(query.getQuery()).thenReturn("tomatoes");
 
-        final IProduce one = new FlickrImageItem();
+        final IProduce one = new FlickrImageItem(new FlickrImageSizeMapperTest(new FlickrImageSizeFilter()));
         one.setImageId("123456");
 
-        final IProduce two = new FlickrImageItem();
+        final IProduce two = new FlickrImageItem(new FlickrImageSizeMapperTest(new FlickrImageSizeFilter()));
         two.setImageId("654321");
 
 

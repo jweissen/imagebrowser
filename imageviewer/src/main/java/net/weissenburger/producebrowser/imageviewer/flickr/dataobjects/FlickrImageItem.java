@@ -1,7 +1,6 @@
 package net.weissenburger.producebrowser.imageviewer.flickr.dataobjects;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -32,6 +31,8 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     int fullImageHeight;
     int fullImageWidth;
 
+    IFlickrImageSizeMapper mapper;
+
 
     protected FlickrImageItem(Parcel in) {
         previewImageUrl = in.readString();
@@ -41,10 +42,11 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
         fullImageHeight = in.readInt();
         fullImageWidth = in.readInt();
         size = in.createTypedArray(FlickrImageSize.CREATOR);
+        generateDefaultMapper();
     }
 
-    public FlickrImageItem() {
-
+    public FlickrImageItem(IFlickrImageSizeMapper mapper) {
+        this.mapper = mapper;
     }
 
     public static final Creator<FlickrImageItem> CREATOR = new Creator<FlickrImageItem>() {
@@ -62,9 +64,7 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     @Override
     public String getPreviewImageUrl() {
         if (previewImageUrl == null) {
-            int index = FlickrImageSize.returnSizeIndex(sizeKeys.THUMBNAIL.getSize(), size);
-            if (index >= 0)
-                previewImageUrl = size[index].getSource();
+            previewImageUrl = mapper.getPreviewImageUrl(sizeKeys.THUMBNAIL.getSize(), size);
         }
 
         return previewImageUrl;
@@ -74,14 +74,8 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     public String getFullImageUrl() {
         if (fullImageUrl == null) {
 
-            int index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE.getSize(), size);
-            if (index >= 0)
-                fullImageUrl = size[index].getSource();
-            else {
-                index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
-                if (index >= 0)
-                    fullImageUrl = size[index].getSource();
-            }
+           fullImageUrl = mapper.getFullImageUrl(sizeKeys.FULL_SIZE.getSize(),
+                   sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
 
         }
         return fullImageUrl;
@@ -131,15 +125,8 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     @Override
     public int getFullImageHeight() {
         if (fullImageHeight == 0) {
-
-            int index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE.getSize(), size);
-            if (index >= 0)
-                fullImageHeight = size[index].getHeight();
-            else {
-                index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
-                if (index >= 0)
-                    fullImageHeight = size[index].getHeight();
-            }
+            fullImageHeight = mapper.getFullImageHeight(sizeKeys.FULL_SIZE.getSize(),
+                    sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
         }
         return fullImageHeight;
     }
@@ -147,16 +134,15 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     @Override
     public int getFullImageWidth() {
         if (fullImageWidth == 0) {
-            int index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE.getSize(), size);
-            if (index >= 0)
-                fullImageWidth = size[index].getWidth();
-            else {
-                index = FlickrImageSize.returnSizeIndex(sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
-                if (index >= 0)
-                    fullImageWidth = size[index].getWidth();
-            }
+          fullImageWidth = mapper.getFullImageWidth(sizeKeys.FULL_SIZE.getSize(),
+                  sizeKeys.FULL_SIZE_FALLBACK.getSize(), size);
         }
         return fullImageWidth;
+    }
+
+    @Override
+    public void generateDefaultMapper() {
+       this.mapper = new FlickrImageSizeMapper(new FlickrImageSizeFilter());
     }
 
     @Override
@@ -184,7 +170,7 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     }
 
 
-    private enum sizeKeys {
+    public enum sizeKeys {
         THUMBNAIL("Small"),
         FULL_SIZE("Large"),
         FULL_SIZE_FALLBACK("Original");
