@@ -51,15 +51,15 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
     @Override
     public void getProduceImages(final IProduceResponseCallback callback, IProduceQuery query) {
 
+
+        if (query == null || query.getQuery() == null || query.getQuery().isEmpty()) {
+            callback.onError(IProduceResponseCallback.ErrorCode.BAD_QUERY, "Request was empty");
+            return;
+        }
+
         //TODO: make this a comparable
         if (lastQuery != null && lastQuery.getQuery().equals(query.getQuery()) &&
                 lastQuery.getPage() == query.getPage()) {
-
-//            if (!isLoading) {
-//                callback.onResponse(list.getProduce().toArray(
-//                        new IProduce[list.getProduce().size()]));
-//            }
-
             callback.onResponse(list.getProduce().toArray(
                     new IProduce[list.getProduce().size()]));
 
@@ -75,10 +75,6 @@ public class FlickrDataCoordinator implements IProduceDataCoordinator {
         produceLoaded = 0;
         isLoading = true;
 
-        if (query == null || query.getQuery() == null || query.getQuery().isEmpty()) {
-            callback.onError(IProduceResponseCallback.ErrorCode.BAD_QUERY, "Request was empty");
-            return;
-        }
 
         // make request for search images
         loader.request(new IProduceResponseCallback() {

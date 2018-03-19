@@ -1,5 +1,7 @@
 package net.weissenburger.producebrowser.imageviewer.loader;
 
+import net.weissenburger.producebrowser.imageviewer.model.IProduce;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +38,16 @@ public class ProduceQueryTest {
         assertTrue(query.getQuery().equals(newQuery));
     }
 
+    @Test
+    public void testGenerateNextPageQuery() {
+        query = new ProduceQuery("tomatoes");
+        IProduceQuery nextQuery = query.nextPage();
+
+        assertTrue(nextQuery.isNextPageQuery());
+        assertTrue(nextQuery.getPage() == 2);
+
+
+    }
 
 
 }

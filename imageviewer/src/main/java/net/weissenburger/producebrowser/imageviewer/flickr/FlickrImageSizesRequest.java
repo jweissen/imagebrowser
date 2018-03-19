@@ -6,6 +6,7 @@ import net.weissenburger.producebrowser.imageviewer.loader.IProduceQuery;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by Jon Weissenburger on 3/8/18.
@@ -17,9 +18,11 @@ public class FlickrImageSizesRequest implements IProduceDataAPI {
 
     @Override
     public String getURL(IProduceQuery query) throws UnsupportedEncodingException {
-        return "https://api.flickr.com/services/rest/?method=flickr.photos.getSizes" +
+        String encodedURL = "https://api.flickr.com/services/rest/?method=flickr.photos.getSizes" +
                 "&api_key=" + API_KEY +
-                "&photo_id=" + query.getQuery() + "&format=json&nojsoncallback=1";
+                "&photo_id=" + URLEncoder.encode(query.getQuery(), "UTF-8") + "&format=json&nojsoncallback=1";
+
+        return encodedURL;
     }
 
 
