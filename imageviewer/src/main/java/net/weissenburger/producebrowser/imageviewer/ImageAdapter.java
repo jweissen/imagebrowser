@@ -100,7 +100,6 @@ public class ImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             NetworkImageView imageView = ((ViewHolder) holder).image;
             imageView.setImageUrl(list[position].getPreviewImageUrl(), imageLoader);
             imageView.setDefaultImageResId(R.drawable.default_image);
-            //imageView.setErrorImageResId();
         }
     }
 

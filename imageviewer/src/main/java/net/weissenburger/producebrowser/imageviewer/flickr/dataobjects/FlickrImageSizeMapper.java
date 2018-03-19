@@ -16,11 +16,14 @@ public class FlickrImageSizeMapper implements IFlickrImageSizeMapper {
     public String getFullImageUrl(String size, String fallbackSize, FlickrImageSize[] array) {
         String fullImageUrl = null;
 
-        int index = filter.returnSizeIndex(FlickrImageItem.sizeKeys.FULL_SIZE.getSize(), array);
+        if (array == null)
+            return null;
+
+        int index = filter.returnSizeIndex(size, array);
         if (index >= 0)
             fullImageUrl = array[index].getSource();
         else {
-            index = filter.returnSizeIndex(FlickrImageItem.sizeKeys.FULL_SIZE_FALLBACK.getSize(), array);
+            index = filter.returnSizeIndex(fallbackSize, array);
             if (index >= 0)
                 fullImageUrl = array[index].getSource();
         }
@@ -63,7 +66,7 @@ public class FlickrImageSizeMapper implements IFlickrImageSizeMapper {
         if (index >= 0)
             fullImageWidth = array[index].getWidth();
         else {
-            index = filter.returnSizeIndex(FlickrImageItem.sizeKeys.FULL_SIZE_FALLBACK.getSize(), array);
+            index = filter.returnSizeIndex(fallbackSize, array);
             if (index >= 0)
                 fullImageWidth = array[index].getWidth();
         }

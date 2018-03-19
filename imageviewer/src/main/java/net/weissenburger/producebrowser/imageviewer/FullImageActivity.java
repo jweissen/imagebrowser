@@ -58,9 +58,6 @@ public class FullImageActivity extends AppCompatActivity implements IFullImageCo
 
 
         if (item != null) {
-//            imageView.setLayoutParams(new RelativeLayout.LayoutParams(item.getFullImageWidth(),
-//                    item.getFullImageHeight()));
-
             presenter.loadImage(imageView, item);
             captionTextView.setText(item.getCaption());
         } else {

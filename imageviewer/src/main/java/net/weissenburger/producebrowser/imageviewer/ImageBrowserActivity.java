@@ -148,10 +148,6 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
         }
-//        if (searchView != null) {
-//            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        }
-
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -198,7 +194,7 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
         return new FlickrDataCoordinator(new ProduceDataLoader(this, new VolleyNetworkManager.VolleyNetworkManagerBuilder(),
                 new VolleyRequest.VolleyRequestBuilder(), new JsonRequestWrapper()));
 
-        //TODO: allow multiple sources of data?
+        //TODO: allow multiple sources of data
 
     }
 
@@ -242,16 +238,19 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
 
     @Override
     public void showNoResultsFound() {
+        //TODO: error handling
 
     }
 
     @Override
     public void showGeneralError() {
+        //TODO: error handling
 
     }
 
     @Override
     public void repromptQuery() {
+        //TODO: error handling
 
     }
 

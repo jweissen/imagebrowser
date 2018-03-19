@@ -28,7 +28,6 @@ public interface IBrowserContract {
 
     interface IBrowserPresenter extends IPresenter {
         void getProduce(IProduceQuery query);
-        void onProduceClicked();
         IImageLoaderWrapper getImageLoader();
     }
 

@@ -57,11 +57,6 @@ public class ImageBrowserPresenter implements IBrowserContract.IBrowserPresenter
     }
 
     @Override
-    public void onProduceClicked() {
-
-    }
-
-    @Override
     public IImageLoaderWrapper getImageLoader() {
         return dataCoordinator.getImageLoader();
     }

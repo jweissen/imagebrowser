@@ -170,7 +170,7 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
     }
 
 
-    public enum sizeKeys {
+    private enum sizeKeys {
         THUMBNAIL("Small"),
         FULL_SIZE("Large"),
         FULL_SIZE_FALLBACK("Original");

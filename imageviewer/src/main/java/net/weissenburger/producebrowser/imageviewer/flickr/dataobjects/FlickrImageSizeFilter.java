@@ -8,7 +8,7 @@ public class FlickrImageSizeFilter implements IFlickrImageSizeFilter {
 
     @Override
     public int returnSizeIndex(String size, FlickrImageSize[] sizeArray) {
-        if (sizeArray == null)
+        if (sizeArray == null || size == null || size.equals(""))
             return -1;
 
         for (int i=0; i < sizeArray.length; i++) {
