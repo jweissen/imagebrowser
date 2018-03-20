@@ -116,10 +116,13 @@ public class ImageBrowserActivity extends AppCompatActivity implements IBrowserC
 
         progressBar = findViewById(R.id.image_browser_progress_bar);
 
-        if (savedInstanceState == null) {
+        presenter = (ImageBrowserPresenter) PresenterBinding.getPresenter(this);
+
+        if (presenter == null) {
             presenter = new ImageBrowserPresenter(getProduceDataCoordinator());
-        } else {
-            presenter = (ImageBrowserPresenter) PresenterBinding.getPresenter(this);
+        }
+
+        if (savedInstanceState != null) {
             currentQuery = savedInstanceState.getParcelable(CURRENT_QUERY_KEY);
             endlessScrollLoading = savedInstanceState.getBoolean(ENDLESS_SCROLL_KEY);
 

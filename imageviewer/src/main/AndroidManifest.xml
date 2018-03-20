@@ -14,7 +14,9 @@
                 <data
                     android:host="weissenburger.net"
                     android:pathPattern="/produce/.*"
-                    android:scheme="http" />
+                    android:scheme="http"
+                    />
+                <data android:scheme="https" />
             </intent-filter>
         </activity>
 

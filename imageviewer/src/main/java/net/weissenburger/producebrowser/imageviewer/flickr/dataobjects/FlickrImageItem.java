@@ -49,6 +49,10 @@ public class FlickrImageItem implements IProduce, IProduceDeserializer<IProduce>
         this.mapper = mapper;
     }
 
+    public FlickrImageItem() {
+        generateDefaultMapper();
+    }
+
     public static final Creator<FlickrImageItem> CREATOR = new Creator<FlickrImageItem>() {
         @Override
         public FlickrImageItem createFromParcel(Parcel in) {
